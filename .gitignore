@@ -1,0 +1,4 @@
+.envrc
+.nrepl-port
+.lein-*
+target

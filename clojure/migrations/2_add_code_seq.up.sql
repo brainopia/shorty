@@ -1,0 +1,1 @@
+CREATE SEQUENCE code_seq START 3364 -- = 58*58
