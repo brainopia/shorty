@@ -41,6 +41,6 @@ func increaseCount(record *Record) {
 
 func try(err error) {
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 }
