@@ -15,7 +15,8 @@ func main() {
 	connectDB()
 	db.AutoMigrate(&Record{})
 
-	router := gin.Default()
+	router := gin.New()
+	router.Use(gin.Logger(), gin.Recovery())
 	router.POST("/shorten", Shorten)
 	router.GET("/expand/:code", Expand)
 	router.GET("/r/:code", Redirect)
