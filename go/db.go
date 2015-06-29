@@ -6,7 +6,6 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/peterhellberg/env"
 	"github.com/tv42/base58"
-	"log"
 	"math/big"
 )
 
@@ -36,11 +35,5 @@ func nextCode() string {
 }
 
 func increaseCount(record *Record) {
-	db.Model(record).Update("OpenCount", gorm.Expr("open_count + 1"))
-}
-
-func try(err error) {
-	if err != nil {
-		log.Panic(err)
-	}
+	try(db.Model(record).Update("OpenCount", gorm.Expr("open_count + 1")).Error)
 }

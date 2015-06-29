@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"strconv"
 )
 
@@ -13,7 +14,7 @@ type Record struct {
 
 func main() {
 	connectDB()
-	db.AutoMigrate(&Record{})
+	try(db.AutoMigrate(&Record{}).Error)
 
 	router := gin.New()
 	router.Use(gin.Logger(), gin.Recovery())
@@ -29,7 +30,7 @@ func Shorten(c *gin.Context) {
 	code := nextCode()
 	record := Record{Url: url, Code: code}
 
-	db.Create(&record)
+	try(db.Create(&record).Error)
 	c.String(200, "http://shorty.com/%s", code)
 }
 
@@ -54,10 +55,12 @@ func Stats(c *gin.Context) {
 
 func findByCode(c *gin.Context) (record Record) {
 	code := c.Param("code")
-	db.Where("code = ?", code).First(&record)
+	err := db.Where("code = ?", code).First(&record).Error
 
-	if record.Url == "" {
+	if err == gorm.RecordNotFound {
 		c.String(404, "Not found")
+	} else {
+		try(err)
 	}
 	return record
 }
